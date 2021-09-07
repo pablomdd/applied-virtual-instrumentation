@@ -13,11 +13,11 @@ def pathlength(x: List[int], y: List[int]):
 # tests vars
 L1 = [[0], [0]]
 
-
 # Unit test function
+
+
 def test_pathlength():
     L2_length = 0
-
     expected_result = True
     print("Expect L1 & L2 to be " + str(expected_result))
     print("Test result is " + str(pathlength(L1[0], L1[1]) == L2_length))
