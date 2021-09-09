@@ -7,8 +7,8 @@ namespace AreaTriangule
     {
         static double areaTriangule((int x, int y) v1, (int x, int y) v2, (int x, int y) v3)
         {
-            double area = 0.5 * Math.Abs(v2.x * v3.y - v3.x * v2.y - v3.x*v2.y - v3.x*v2.y - 
-                v1.x*v3.y + v3.x*v1.y + v1.x*v2.y -v2.x*v1.y);
+            double area = 0.5 * Math.Abs(v2.x * v3.y - v3.x * v2.y - v3.x * v2.y - v3.x * v2.y - 
+                v1.x * v3.y + v3.x * v1.y + v1.x * v2.y -v2.x * v1.y);
             return area;
         }
         static void Main(string[] args)
