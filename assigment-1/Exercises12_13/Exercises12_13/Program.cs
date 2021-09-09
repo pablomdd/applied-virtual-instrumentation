@@ -24,9 +24,35 @@ namespace Exercises12_13
             Console.WriteLine("Expect test to be " + expectedResult);
             Console.WriteLine("Test Result is: " + (PathLength(x, y) == L2));
         }
+
+        static (double[] x, double[] y) PiApprox(int n)
+        {
+            double[] x = new double[n];
+            double[] y = new double[n];
+
+            for(int i = 0; i < n; ++i)
+            {
+                x[i] = Math.Cos(2 * Math.PI * i / n);
+                y[i] = Math.Sin(2 * Math.PI * i / n);
+            }
+            return (x, y);
+        }
+
+        static void testPiApprox()
+        {
+            const int testLimit = 10;
+            for(int k = 2; k <= testLimit; ++k)
+            {
+                int n = Convert.ToInt32(Math.Pow(2, k));
+                (double[] x, double[] y) = PiApprox(n);
+                double piApprox = PathLength(x, y);
+                double error = Math.PI - piApprox;
+                Console.WriteLine("With " + n + " point the error is " + error);
+            }
+        }
         static void Main(string[] args)
         {
-            TestPathLength();
+            testPiApprox();
         }
     }
 }

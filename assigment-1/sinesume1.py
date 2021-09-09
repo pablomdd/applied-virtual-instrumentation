@@ -22,7 +22,7 @@ def f(t, T):
 
 def printErrorTable():
     n_list = [1, 3, 5, 10, 30, 100]
-    alpha_list = 0.01, 0.25, 0.49
+    alpha_list = [0.01, 0.25, 0.49]
     T = 2 * pi
     t_list = [2 * alpha * T for alpha in alpha_list]
     for n in n_list:
