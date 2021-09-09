@@ -17,7 +17,7 @@ namespace AreaTriangule
             (int x, int y) v2 = (1, 0);
             (int x, int y) v3 = (0, 2);
 
-            Console.WriteLine(areaTriangule(v1, v2, v3));
+            Console.WriteLine("Trianguale area is: " + areaTriangule(v1, v2, v3));
         }
     }
 }

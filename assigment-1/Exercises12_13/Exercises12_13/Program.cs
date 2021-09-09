@@ -16,13 +16,14 @@ namespace Exercises12_13
 
         static void TestPathLength()
         {
+            Console.WriteLine("============Test Path Length=============");
             double L2 = 5;
             bool expectedResult = true;
 
             double[] x = new double[] { 0, 3 };
             double[] y = new double[] { 0, 4 };
-            Console.WriteLine("Expect test to be " + expectedResult);
-            Console.WriteLine("Test Result is: " + (PathLength(x, y) == L2));
+            Console.WriteLine("Expect Test 1 to be " + expectedResult);
+            Console.WriteLine("Test 1 result is: " + (PathLength(x, y) == L2));
         }
 
         static (double[] x, double[] y) PiApprox(int n)
@@ -38,7 +39,7 @@ namespace Exercises12_13
             return (x, y);
         }
 
-        static void testPiApprox()
+        static void TestPiApprox()
         {
             const int testLimit = 10;
             for(int k = 2; k <= testLimit; ++k)
@@ -52,7 +53,8 @@ namespace Exercises12_13
         }
         static void Main(string[] args)
         {
-            testPiApprox();
+            TestPathLength();          
+            TestPiApprox();
         }
     }
 }
