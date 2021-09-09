@@ -17,7 +17,6 @@ def f(t, T):
         return 0
     elif T / 2 < t < T:
         return -1
-    return None
 
 
 def printErrorTable():

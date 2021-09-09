@@ -18,7 +18,7 @@ test_diff()
 
 func_dict = {
     'e^x': (exp, 0, exp(0)),
-    'e^(-2x^2)': (lambda x: exp(-2*x**2), 0, 0),
+    'e^(-2x^2)': (lambda x: exp(-2 * x**2), 0, 0),
     'cos(x)': (cos, 2*pi, sin(2*pi)),
     'ln(x)': (log, 1, 0)
 }
@@ -28,9 +28,7 @@ def application():
     print("===Application===")
     print("f(x) \t\tx   \t\tf'(x)  \t\tdiff(x) \t\tError")
     for func in func_dict:
-        f = func_dict[func][0]
-        x = func_dict[func][1]
-        res = func_dict[func][2]
+        f, x, res = func_dict[func]
         d = diff(f, x, 0.1)
         error = d - res
         print(func + "\t\t" +
