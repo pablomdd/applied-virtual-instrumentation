@@ -29,7 +29,7 @@ namespace ArduinoForm
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             this.Plt_Data = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.btn_start = new System.Windows.Forms.Button();
             this.CB_Port = new System.Windows.Forms.ComboBox();
@@ -44,8 +44,8 @@ namespace ArduinoForm
             // 
             // Plt_Data
             // 
-            chartArea1.Name = "ChartArea1";
-            this.Plt_Data.ChartAreas.Add(chartArea1);
+            chartArea2.Name = "ChartArea1";
+            this.Plt_Data.ChartAreas.Add(chartArea2);
             this.Plt_Data.Location = new System.Drawing.Point(191, 68);
             this.Plt_Data.Name = "Plt_Data";
             this.Plt_Data.Size = new System.Drawing.Size(547, 297);
@@ -96,6 +96,7 @@ namespace ArduinoForm
             this.btn_stop.TabIndex = 4;
             this.btn_stop.Text = "Stop";
             this.btn_stop.UseVisualStyleBackColor = true;
+            this.btn_stop.Click += new System.EventHandler(this.btn_stop_Click);
             // 
             // btn_save
             // 
@@ -105,6 +106,7 @@ namespace ArduinoForm
             this.btn_save.TabIndex = 5;
             this.btn_save.Text = "Save";
             this.btn_save.UseVisualStyleBackColor = true;
+            this.btn_save.Click += new System.EventHandler(this.btn_save_Click);
             // 
             // Lbl_Samples
             // 

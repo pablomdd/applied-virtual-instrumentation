@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using System.IO.Ports; // Serial Port
 using System.Threading; // Async temporitzation
 using System.IO; // File management
+using System.Drawing;
 
 namespace ArduinoForm
 {
@@ -57,15 +58,105 @@ namespace ArduinoForm
             btn_save.Enabled = false;
             btn_stop.Enabled = true;
             bool statusPort = false;
-            int samplePeriod = 500; //ms
+            // int samplePeriod = 500; //ms
+            double time = 0;
+            int period = 500;
             dataStr = new string[0];
             int samples = Convert.ToUInt16(NUD_Samples.Value);
             m = 0;
             stopAdquisition = false;
 
-            statusPort = InitSerial();
             Plt_Data.Series.Clear();
             Plt_Data.Series.Add("xy");
+            Plt_Data.Series["xy"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            Plt_Data.Series["xy"].BorderWidth = 3;
+            Plt_Data.Series["xy"].BorderDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dash;
+            Plt_Data.Series["xy"].MarkerStyle = System.Windows.Forms.DataVisualization.Charting.MarkerStyle.Circle;
+            Plt_Data.Series["xy"].MarkerSize = 9;
+            Plt_Data.Series["xy"].Color = Color.OrangeRed;
+
+            statusPort = InitSerial();
+            await GetDelay(2000);
+            if (statusPort)
+            {
+                serialPort.Open();
+                serialPort.DiscardInBuffer();
+                await GetDelay(1000);
+                string data = "";
+                double value = 0;
+                int fail = 0;
+                time = 0;
+                for (int i = 0; i < samples; ++i)
+                {
+                    if(i == 0)
+                    {
+                        btn_stop.Enabled = true;
+                    }
+                    try
+                    {
+                        data = serialPort.ReadLine();
+                        value = Convert.ToDouble(data) * (5.0 / 1023);
+                        Plt_Data.Series["xy"].Points.AddXY(time, value);
+
+                        Array.Resize(ref dataStr, dataStr.Length + 1);
+                        dataStr[dataStr.Length - 1] = Convert.ToString(time) + "," + value.ToString("F4");
+
+                        m++;
+                    }
+                    catch
+                    {
+                        fail++;
+                    }
+                    if (stopAdquisition)
+                    {
+                        break;
+                    }
+                    time = time + (period / 1000);
+                    await GetDelay(period);
+
+                }
+                serialPort.Close();
+            }
+            await GetDelay(1000);
+            btn_stop.Enabled = false;
+            btn_start.Enabled = true;
+            btn_save.Enabled = true;
+        }
+
+        private async void btn_stop_Click(object sender, EventArgs e)
+        {
+            stopAdquisition = true;
+            btn_stop.Enabled = false;
+            btn_start.Enabled = false;
+            btn_save.Enabled = false;
+            await GetDelay(1000);
+            btn_start.Enabled = true;
+            btn_save.Enabled = true;
+        }
+
+        private void btn_save_Click(object sender, EventArgs e)
+        {
+            btn_start.Enabled = false;
+            btn_save.Enabled = false;
+            Stream myStream;
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.RestoreDirectory = true;
+            if ( saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                if((myStream = saveFileDialog.OpenFile()) != null)
+                {
+                    using(StreamWriter writer = new StreamWriter(myStream))
+                    {
+                        for (int i = 0; i < dataStr.Length; ++i)
+                        {
+                            writer.WriteLine(dataStr[i]);
+                        }
+                    }
+                    myStream.Close();
+                }
+            }
+            btn_start.Enabled = true;
+            btn_save.Enabled = true;
         }
     }
 }
