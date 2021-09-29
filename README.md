@@ -7,5 +7,6 @@ https://packaging.python.org/tutorials/installing-packages/
 - `python -m pip install pyserial`
 - `python -m pip install drawnow`
 - `python -m pip install pyfirmata`
+- `python -m pip install wxPython`
 
 
