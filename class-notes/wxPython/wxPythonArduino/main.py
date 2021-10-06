@@ -20,12 +20,87 @@ import sys
 class TopPanel(wx.Panel):
     def __init__(self, parent):
         super().__init__(parent)
-        pass
-    
+        self.figure = Figure()
+        self.axes = self.figure.add_subplot(111)
+        self.canvas = FigureCanvas(self, -1, self.figure)
+        self.sizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.sizer.Add(self.canvas, 1, wx.EXPAND)
+        self.SetSizer(self.sizer)
+        self.axes.set_xlabel("Time (s)")
+        self.axes.set_ylabel("Voltage (V)")
+        self.axes.set_ylim(-0.1, 5.1)
+        self.canvas.draw()
+        
 class BottomPanel(wx.Panel):
     def __init__(self, parent, top):
         super().__init__(parent)
+        self.graph = top
+        self.buttonStart = wx.Button(self, id = 1, label = "Start", 
+                                     pos=(400,40))
+        self.buttonStart.Bind(wx.EVT_BUTTON, self.OnStartClick)
+        self.buttonStop = wx.Button(self, id = 2, label = "Stop", 
+                                    pos=(400,40))
+        self.buttonStop.Bind(wx.EVT_BUTTON, self.OnStopClick)
+        
+        self.timer = wx.Timer()
+        self.Bind(wx.EVT_TIMER, self.TimeInterval, self.timer)
+        self.labelPort = wx.StaticText(self, label="Serial Port:", 
+                                       pos=(40,20))
+        self.commPorts = wx.ListBox(self, id=3, pos=(40,40), 
+                                    choices=self.getSerialPorts(), 
+                                    style=0, name="Ports")     
+        self.LabelSamples = wx.StaticText(self, label="Samples:",
+                                          pos=(190,20))
+        self.spintCtrlTime =  wx.SpinCtrl(self, id=4, value="",
+                                          pos=(190,40), min=1, max=1000,
+                                          initial=10, name="wxSpinCtrlTime")
+        self.buttonSaveData = wx.Button(self, id=5, label="Save", 
+                                        pos=(500,40),
+                                        name="ButtonSaveData")
+        self.buttonSaveData.Bind(wx.EVT_BUTTON, self.OnStartSave)
+        self.buttonSaveData.Hide()
+        self.buttonStop.Hide()
+        self.n = 0
+        self.serialConnection = False
+        self.x = np.array([])
+        self.y = np.array([])
+        self.time = 0
+        self.values = []
+        
+        
+    def OnStartSave(self, event):
+        print("Save")
+        
+    def OnStartClick(self, event):
+        print("Start")
+        
+    def OnStopClick(self, event):
+        print("Stop")
+        
+    def TimeInterval(self, event):
         pass
+    
+    def getSerialPorts(self) -> list:
+        if sys.platform.startswith('win'):
+            ports = ['COM%s' % (i + 1) for i in range(256)]
+        elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
+            # this excludes your current terminal "/dev/tty"
+            ports = glob.glob('/dev/tty[A-Za-z]*')
+        elif sys.platform.startswith('darwin'):
+            ports = glob.glob('/dev/tty.*')
+        else:
+            raise EnvironmentError('Unsupported platform')
+        
+        result = []
+        for port in ports:  
+            try: 
+                s = serial.Serial(port, 9600)
+                print(s)
+                s.close()
+                result.append(port)
+            except:
+                pass
+        return result
     
 class Main(wx.Frame):
     def __init__(self):
