@@ -42,7 +42,7 @@ class BottomPanel(wx.Panel):
                                     pos=(400,40))
         self.buttonStop.Bind(wx.EVT_BUTTON, self.OnStopClick)
         
-        self.timer = wx.Timer()
+        self.timer = wx.Timer(self)
         self.Bind(wx.EVT_TIMER, self.TimeInterval, self.timer)
         self.labelPort = wx.StaticText(self, label="Serial Port:", 
                                        pos=(40,20))
@@ -66,19 +66,83 @@ class BottomPanel(wx.Panel):
         self.y = np.array([])
         self.time = 0
         self.values = []
+        self.stopAcquisition = False
+        self.serialArduino = None
+        self.highValueBoard = 5.0
+        self.boardResolution = 1023
+        self.samplingTime = 0.5
         
         
     def OnStartSave(self, event):
         print("Save")
         
     def OnStartClick(self, event):
-        print("Start")
+        if self.serialArduino != None:
+            self.serialArduino.close()
+        self.buttonStart.Hide()
+        self.buttonStop.Show()
+        self.buttonSaveData.Hide()
+        self.n = 0
+        self.time = 0
+        self.x = np.array([])
+        self.y = np.array([])
+        takeData = False
+        self.serialConnection = False
+        self.values = []
+        self.stopAcquisition = False
+        portVal = self.commPorts.GetSelection()
+ 
+        if portVal == -1:
+            takeData = False
+            wx.CallLater(10, self.ShowErrorMessagePort)
+        else:
+            portSelected = self.commPorts.GetString(portVal)
+            takeData = True
+
+        if self.serialConnection == False and takeData == True:
+            self.timer.Start(self.samplingTime)
+            try:
+                self.serialArduino = serial.Serial(str(portSelected), 9600, timeout=1)
+                time.sleep(1)
+                self.serialArduino.reset_input_buffer()
+                self.serialConnection = True
+                print(self.serialArduino)
+            except:
+                self.serialConnection = False
+                wx.CallLater(50, self.ShowErrorMessageConnection)
+            
         
     def OnStopClick(self, event):
         print("Stop")
         
     def TimeInterval(self, event):
-        pass
+        self.buttonStop.Show()
+        self.buttonStart.Hide()
+        self.buttonSaveData.Hide()
+        
+        if self.serialConnection:
+            samples = int(self.spintCtrlTime.GetValue())
+            try:
+                temp = str(self.serialArduino.readline().decode('cp437'))
+                temp = temp.replace("\r\n", "")
+                value = (float(temp) * 
+                         self.highValueBoard / self.boardResolution)
+                printConsole = "Time: " + str(self.time) + " (s)\t"
+                printConsole += "Voltage: " + str(value) + " (V)"
+                print(printConsole)
+            except:
+                pass
+            
+            self.time += 0.5
+            self.n += 1
+            
+            if self.n >= samples or self.stopAcquisition:
+                self.buttonStop.Hide()
+                self.buttonStart.Show()
+                self.buttonSaveData.Show()
+                self.timer.Stop()
+                self.serialConnection = False
+                
     
     def getSerialPorts(self) -> list:
         if sys.platform.startswith('win'):
@@ -95,13 +159,23 @@ class BottomPanel(wx.Panel):
         for port in ports:  
             try: 
                 s = serial.Serial(port, 9600)
-                print(s)
                 s.close()
                 result.append(port)
             except:
                 pass
         return result
     
+    def ShowErrorMessagePort(self):
+        wx.MessageBox('No serial port selected or available.', 
+                      'Serial Communication', wx.OK | wx.ICON_ERROR)
+        
+        
+    def ShowErrorMessageConnection(self):
+        wx.MessageBox('Communication with board failed.', 
+                      'Communication Error', wx.OK | wx.ICON_ERROR)
+    
+        
+        
 class Main(wx.Frame):
     def __init__(self):
         super().__init__(None, title = "SPM Arduino and wxPython", 
