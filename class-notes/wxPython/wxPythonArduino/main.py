@@ -30,6 +30,15 @@ class TopPanel(wx.Panel):
         self.axes.set_ylabel("Voltage (V)")
         self.axes.set_ylim(-0.1, 5.1)
         self.canvas.draw()
+       
+        
+    def draw(self, x, y):
+        self.axes.clear()
+        self.axes.set_ylabel("Voltage (V)")
+        self.axes.set_xlabel("Time (s)")
+        self.axes.plot(x, y, "C1o--")
+        self.canvas.draw()
+        
         
 class BottomPanel(wx.Panel):
     def __init__(self, parent, top):
@@ -53,7 +62,7 @@ class BottomPanel(wx.Panel):
                                           pos=(190,20))
         self.spintCtrlTime =  wx.SpinCtrl(self, id=4, value="",
                                           pos=(190,40), min=1, max=1000,
-                                          initial=10, name="wxSpinCtrlTime")
+                                          initial=25, name="wxSpinCtrlTime")
         self.buttonSaveData = wx.Button(self, id=5, label="Save", 
                                         pos=(500,40),
                                         name="ButtonSaveData")
@@ -70,11 +79,22 @@ class BottomPanel(wx.Panel):
         self.serialArduino = None
         self.highValueBoard = 5.0
         self.boardResolution = 1023
-        self.samplingTime = 0.5
+        self.samplingTime = 500 #ms
         
         
     def OnStartSave(self, event):
-        print("Save")
+        fileDialog = wx.FileDialog(self, "Input setting file path", "", "",
+                                   "CSV files(*.csv)|*.*", wx.FD_SAVE)
+        if fileDialog.ShowModal() == wx.ID_OK:
+            self.save_path = fileDialog.GetPath() + ".csv"
+            try:
+                myFile = open(self.save_path, 'w')
+                myFile.write("Time_(s),Voltage(V)" + "\n")
+                for i in range(len(self.values)):
+                    myFile.write(self.values[i] + "\n")
+                myFile.close()
+            except:
+                pass
         
     def OnStartClick(self, event):
         if self.serialArduino != None:
@@ -113,7 +133,8 @@ class BottomPanel(wx.Panel):
             
         
     def OnStopClick(self, event):
-        print("Stop")
+        self.buttonStop.Hide()
+        self.stopAcquisition = True
         
     def TimeInterval(self, event):
         self.buttonStop.Show()
@@ -130,6 +151,12 @@ class BottomPanel(wx.Panel):
                 printConsole = "Time: " + str(self.time) + " (s)\t"
                 printConsole += "Voltage: " + str(value) + " (V)"
                 print(printConsole)
+                
+                self.values.append(str(self.time) + ","
+                                   + str("{0:3f}").format(value))
+                self.y = np.append(self.y, value)
+                self.x = np.append(self.x, self.time)
+                self.graph.draw(self.x, self.y)
             except:
                 pass
             
