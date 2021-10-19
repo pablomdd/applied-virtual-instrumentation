@@ -52,7 +52,7 @@ class AppWindow(Gtk.ApplicationWindow):
         self.stop_button.connect("clicked", self.on_button_stop)
         vbox.pack_start(self.stop_button, False, False, 0)
 
-        self.save_button = Gtk.Button.new_with_label("save")
+        self.save_button = Gtk.Button.new_with_label("Save")
         self.save_button.connect("clicked", self.on_button_save)
         vbox.pack_start(self.save_button, False, False, 0)
 
@@ -60,6 +60,7 @@ class AppWindow(Gtk.ApplicationWindow):
 
         # App vars initialization
         self.port = None
+        self.baud_rate = 9600
         self.logic_level = 5.0
         self.board_resolution = 1023
 
@@ -78,7 +79,7 @@ class AppWindow(Gtk.ApplicationWindow):
 
         self.samples = 1
         self.micro_board = None
-        self.time_interval = 500  # 500ms
+        self.time_interval = 0.5  # 5s
         self.values = []
 
         self.add(hpaned)
@@ -131,7 +132,75 @@ class AppWindow(Gtk.ApplicationWindow):
         self.samples = samples_spin.get_value_as_int()
 
     def on_button_start(self, widget):
-        pass
+        print("Start")
+        self.timer = threading.Thread(target=self.get_time)
+        self.event = threading.Event()
+        self.timer.daemon = True
+        self.timer.start()
+
+    def get_time(self):
+        time_value = value = count = 0
+        self.t = np.array([])
+        self.v = np.array([])
+        self.start_button.hide()
+        self.save_button.hide()
+        self.stop_button.show()
+        take_data = False
+
+        if self.micro_board != None:
+            self.micro_board.close()
+        if self.port != None:
+            try:
+                self.micro_board = serial.Serial(
+                    str(self.port), self.baud_rate, timeout=1)
+                time.sleep(1)
+                self.micro_board.reset_input_buffer()
+                take_data = True
+            except:
+                if not self.event.is_set():
+                    print("Stop")
+                    self.event.set()
+                    self.timer = None
+                GLib.idle_add(self.on_failed_connection)
+                take_data = False
+        if take_data:
+            if time_value == 0:
+                print("Time(s) \t Voltage(V)")
+            while not self.event.is_set():
+                if count >= self.samples:
+                    print("Stop")
+                    self.event.set()
+                    self.timer = None
+                    if self.micro_board != None:
+                        self.micro_board.close()
+                    break
+                try:
+                    temp = str(self.micro_board.readline().decode('cp437'))
+                    temp = temp.replace("\n", "")
+                    value = (float(temp) * self.logic_level /
+                             self.board_resolution)
+                    print_console = "Time: " + str(time_value) + " (s)\t"
+                    print_console += "Voltage: " + \
+                        "{0:.3f}".format(value) + " (V)"
+                    print(print_console)
+                except:
+                    pass
+                time.sleep(self.time_interval)
+                count += 1
+                time_value += self.time_interval
+            time.sleep(0.5)
+            self.start_button.show()
+            self.save_button.show()
+            self.stop_button.hide()
+
+    def on_faild_connection(self):
+        failed_connection_dialog = Gtk.MessageDialog(transient_for=self,
+                                                     flags=0,
+                                                     message_type=Gtk.MessageType.ERROR,
+                                                     text="Board communication error. No data will be taken",
+                                                     title="Serial Error")
+        failed_connection_dialog.run()
+        failed_connection_dialog.destroy()
 
     def on_button_stop(self, widget):
         pass
