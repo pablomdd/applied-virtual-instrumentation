@@ -527,3 +527,4 @@ dmypy.json
 cython_debug/
 
 *.rar
+.vscode
