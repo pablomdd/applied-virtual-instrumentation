@@ -155,7 +155,7 @@ class MainWindow(QMainWindow):
             self.values.append(str(self.time_val/1000.0) +
                                "," + "{0:.5f}".format(value))
             self.canvas.axes.cla()
-            self.x = np.append(self.x, self.time_val/1000.0)
+            self.x = np.append(self.x, self.time_val / 1000.0)
             self.y = np.append(self.y, value)
             self.canvas.axes.set_xlabel("Time (s)")
             self.canvas.axes.set_ylabel("Voltage (V)")
@@ -184,7 +184,21 @@ class MainWindow(QMainWindow):
         self.stop_acq == True
 
     def on_click_save(self):
-        print("Save")
+        self.btn_start.hide()
+        self.btn_save.hide()
+
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+        filename, _ = QFileDialog.getSaveFileName(
+            self, "QFileDialog.getSaveFileName()", "", "All Files (*);;csv Files (*.csv)", options=options)
+        if filename:
+            file = open(filename, 'w')
+            file.write("Time_(s),Volage(V)\n")
+            for i in range(len(self.values)):
+                file.write(self.values[i] + "\n")
+            file.close()
+        self.btn_start.show()
+        self.btn_save.show()
 
 
 if __name__ == "__main__":
