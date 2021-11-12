@@ -265,6 +265,7 @@ namespace PID_Temperature_Controller
             this.Btn_Start.TabIndex = 17;
             this.Btn_Start.Text = "Start";
             this.Btn_Start.UseVisualStyleBackColor = true;
+            this.Btn_Start.Click += new System.EventHandler(this.Btn_Start_Click);
             // 
             // Btn_Exit
             // 
