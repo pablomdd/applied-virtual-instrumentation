@@ -29,8 +29,8 @@ namespace PID_Temperature_Controller
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.Lbl_SetPoint = new System.Windows.Forms.Label();
             this.Lbl_Period = new System.Windows.Forms.Label();
             this.Lbl_tT = new System.Windows.Forms.Label();
@@ -275,16 +275,17 @@ namespace PID_Temperature_Controller
             this.Btn_Exit.TabIndex = 18;
             this.Btn_Exit.Text = "Exit";
             this.Btn_Exit.UseVisualStyleBackColor = true;
+            this.Btn_Exit.Click += new System.EventHandler(this.Btn_Exit_Click);
             // 
             // Plt_PID
             // 
-            chartArea1.Name = "ChartArea1";
-            this.Plt_PID.ChartAreas.Add(chartArea1);
+            chartArea2.Name = "ChartArea1";
+            this.Plt_PID.ChartAreas.Add(chartArea2);
             this.Plt_PID.Location = new System.Drawing.Point(172, 24);
             this.Plt_PID.Name = "Plt_PID";
-            series1.ChartArea = "ChartArea1";
-            series1.Name = "Series1";
-            this.Plt_PID.Series.Add(series1);
+            series2.ChartArea = "ChartArea1";
+            series2.Name = "Series1";
+            this.Plt_PID.Series.Add(series2);
             this.Plt_PID.Size = new System.Drawing.Size(431, 288);
             this.Plt_PID.TabIndex = 20;
             this.Plt_PID.Text = "chart1";
@@ -395,6 +396,7 @@ namespace PID_Temperature_Controller
             this.Btn_Save.TabIndex = 32;
             this.Btn_Save.Text = "Save";
             this.Btn_Save.UseVisualStyleBackColor = true;
+            this.Btn_Save.Click += new System.EventHandler(this.Btn_Save_Click);
             // 
             // PID_Controller
             // 

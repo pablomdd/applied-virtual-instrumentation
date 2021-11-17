@@ -205,5 +205,52 @@ namespace PID_Temperature_Controller
 
             }
         }
+
+        private string[] StringDataArray(int samples)
+        {
+            string[] values = new string[samples + 1];
+            values[0] = "Time (s), Temperature (C), tH (ms), tL (ms)";
+            string tempStr = "";
+            for (int i = 1; i < samples + 1; ++i)
+            {
+                tempStr = time[i - 1].ToString("F2") + "," + temperature[i - 1].ToString("F2") + 
+                    "," + uPID[i - 1].ToString("F2") + "," + tH[i - 1].ToString("F2") + "," + 
+                    tL[i - 1].ToString("F2");
+                values[i] = tempStr;
+            }
+            return values;
+        }
+
+        private void Btn_Save_Click(object sender, EventArgs e)
+        {
+            Btn_Start.Visible = false;
+            Btn_Save.Visible = false;
+
+            Stream myStream;
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.RestoreDirectory = true;
+            if(saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string[] values = StringDataArray(time.Length);
+                if ((myStream = saveFileDialog.OpenFile()) != null)
+                {
+                    using (StreamWriter writer = new StreamWriter(myStream))
+                    {
+                        for (int i = 0; i < values.Length; ++i)
+                        {
+                            writer.WriteLine(values[i]);
+                        }
+                    }
+                    myStream.Close();
+                }
+            }
+            Btn_Start.Visible = true;
+            Btn_Save.Visible = true;
+        }
+
+        private void Btn_Exit_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
     }
 }
