@@ -110,7 +110,7 @@ namespace PID_Temperature_Controller
                 {
                     for (int i = 0; i < 2; i++)
                     {
-                        await GetDelay(1000);
+                        await GetDelay(2000);
                         serialPort.WriteLine(parameterMessage);
                         continueSteps = true;
                     }
