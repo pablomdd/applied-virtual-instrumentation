@@ -50,10 +50,10 @@ namespace PID_Temperature_Controller
             this.Btn_Start = new System.Windows.Forms.Button();
             this.Btn_Exit = new System.Windows.Forms.Button();
             this.Plt_PID = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.Txt_Temperature = new System.Windows.Forms.TextBox();
             this.Txt_Display_Values = new System.Windows.Forms.TextBox();
             this.Txt_DerivativeTime = new System.Windows.Forms.TextBox();
-            this.Txt_TextBox = new System.Windows.Forms.TextBox();
+            this.Txt_IntegralTime = new System.Windows.Forms.TextBox();
             this.Txt_UpperTemperature = new System.Windows.Forms.TextBox();
             this.Txt_RemainingTime = new System.Windows.Forms.TextBox();
             this.Txt_HighTime = new System.Windows.Forms.TextBox();
@@ -289,14 +289,14 @@ namespace PID_Temperature_Controller
             this.Plt_PID.TabIndex = 20;
             this.Plt_PID.Text = "chart1";
             // 
-            // textBox1
+            // Txt_Temperature
             // 
-            this.textBox1.Location = new System.Drawing.Point(642, 44);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(100, 22);
-            this.textBox1.TabIndex = 21;
-            this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.Txt_Temperature.Location = new System.Drawing.Point(642, 44);
+            this.Txt_Temperature.Name = "Txt_Temperature";
+            this.Txt_Temperature.ReadOnly = true;
+            this.Txt_Temperature.Size = new System.Drawing.Size(100, 22);
+            this.Txt_Temperature.TabIndex = 21;
+            this.Txt_Temperature.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // Txt_Display_Values
             // 
@@ -315,14 +315,14 @@ namespace PID_Temperature_Controller
             this.Txt_DerivativeTime.TabIndex = 23;
             this.Txt_DerivativeTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
-            // Txt_TextBox
+            // Txt_IntegralTime
             // 
-            this.Txt_TextBox.Location = new System.Drawing.Point(642, 186);
-            this.Txt_TextBox.Name = "Txt_TextBox";
-            this.Txt_TextBox.ReadOnly = true;
-            this.Txt_TextBox.Size = new System.Drawing.Size(100, 22);
-            this.Txt_TextBox.TabIndex = 24;
-            this.Txt_TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.Txt_IntegralTime.Location = new System.Drawing.Point(642, 186);
+            this.Txt_IntegralTime.Name = "Txt_IntegralTime";
+            this.Txt_IntegralTime.ReadOnly = true;
+            this.Txt_IntegralTime.Size = new System.Drawing.Size(100, 22);
+            this.Txt_IntegralTime.TabIndex = 24;
+            this.Txt_IntegralTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // Txt_UpperTemperature
             // 
@@ -409,10 +409,10 @@ namespace PID_Temperature_Controller
             this.Controls.Add(this.Txt_RemainingTime);
             this.Controls.Add(this.Txt_HighTime);
             this.Controls.Add(this.Txt_LowerTemperature);
-            this.Controls.Add(this.Txt_TextBox);
+            this.Controls.Add(this.Txt_IntegralTime);
             this.Controls.Add(this.Txt_DerivativeTime);
             this.Controls.Add(this.Txt_Display_Values);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.Txt_Temperature);
             this.Controls.Add(this.Plt_PID);
             this.Controls.Add(this.Btn_Exit);
             this.Controls.Add(this.Btn_Start);
@@ -465,10 +465,10 @@ namespace PID_Temperature_Controller
         private System.Windows.Forms.Button Btn_Start;
         private System.Windows.Forms.Button Btn_Exit;
         private System.Windows.Forms.DataVisualization.Charting.Chart Plt_PID;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox Txt_Temperature;
         private System.Windows.Forms.TextBox Txt_Display_Values;
         private System.Windows.Forms.TextBox Txt_DerivativeTime;
-        private System.Windows.Forms.TextBox Txt_TextBox;
+        private System.Windows.Forms.TextBox Txt_IntegralTime;
         private System.Windows.Forms.TextBox Txt_UpperTemperature;
         private System.Windows.Forms.TextBox Txt_RemainingTime;
         private System.Windows.Forms.TextBox Txt_HighTime;

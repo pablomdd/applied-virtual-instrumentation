@@ -130,7 +130,79 @@ namespace PID_Temperature_Controller
                 Plt_PID.Series["Temperature"].BorderDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dash;
                 Plt_PID.Series["Temperature"].MarkerStyle = System.Windows.Forms.DataVisualization.Charting.MarkerStyle.Circle;
                 Plt_PID.Series["Temperature"].MarkerSize = 9;
-                Plt_PID.Series["Temperature"].MarkerColor = Color.OrangeRed;
+                Plt_PID.Series["Temperature"].Color = Color.OrangeRed;
+
+                time = new double[0];
+                temperature = new double[0];
+                uPID = new double[0];
+                tH = new double[0];
+                tL = new double[0];
+                double timeRema;
+                t = 0;
+                int n = Convert.ToInt32(tT / (period / 1000.0));
+                int count = 0;
+                double u_temp = setPoint * 1.05;
+                Txt_UpperTemperature.Text = u_temp.ToString("F2");
+                double l_temp = setPoint * 0.85;
+                Txt_LowerTemperature.Text = l_temp.ToString("F2");
+                Txt_IntegralTime.Text = Convert.ToString(ti); // Integral Time
+                Txt_DerivativeTime.Text = Convert.ToString(td);
+
+                double u_max = (100.0 / (u_temp - l_temp)) * setPoint;
+                Txt_UMax.Text = Convert.ToString(u_max);
+
+                while(count < (n - 10))
+                {
+                    try
+                    {
+                        string data = serialPort.ReadLine();
+                        string[] splitData = data.Split(new char[] { ',' });
+
+                        if(splitData.Length == 5)
+                        {
+                            Txt_Display_Values.Text = data;
+                            t = Convert.ToDouble(splitData[0]);
+                            Array.Resize(ref time, time.Length + 1);
+                            time[time.Length - 1] = t;
+
+                            double tempTemp = Convert.ToDouble(splitData[1]);
+                            Array.Resize(ref temperature, temperature.Length + 1);
+                            temperature[temperature.Length - 1] = tempTemp;
+
+                            double tempUPID = Convert.ToDouble(splitData[2]);
+                            Array.Resize(ref uPID, uPID.Length + 1);
+                            uPID[uPID.Length - 1] = tempUPID;
+
+                            double temptH = Convert.ToDouble(splitData[3]);
+                            Array.Resize(ref tH, tH.Length + 1);
+                            tH[tH.Length - 1] = temptH;
+
+                            double temptL = Convert.ToDouble(splitData[4]);
+                            Array.Resize(ref tL, tL.Length + 1);
+                            tL[tL.Length - 1] = temptL;
+
+                            timeRema = tT - t;
+                            Txt_RemainingTime.Text = Convert.ToString(timeRema);
+                            Txt_Temperature.Text = Convert.ToString(tempTemp);
+                            Txt_UPID.Text = Convert.ToString(tempUPID);
+                            Txt_HighTime.Text = Convert.ToString(temptH);
+                            Plt_PID.Series["Temperature"].Points.AddXY(t, tempTemp);
+                        }
+                    }
+                    catch
+                    {
+                        
+                    }
+                    count++;
+                    await GetDelay(period);
+                    Btn_Start.Visible = true;
+                    Btn_Save.Visible = true;
+                }
+
+                serialPort.DiscardInBuffer();
+                serialPort.Close();
+                MessageBox.Show("Job done.");
+
             }
         }
     }
