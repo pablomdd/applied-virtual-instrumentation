@@ -4,8 +4,8 @@ import winreg
 import itertools
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg as FigureCanvas
-#from matplotlib.figure import Figure
-import matplotlib as plt
+from matplotlib.figure import Figure
+# import matplotlib as plt
 import numpy as np
 # Scan ports
 import serial
@@ -19,8 +19,9 @@ import sys
 class TopPanel(wx.Panel):
     def __init__(self, parent):
         super().__init__(parent)
-        self.figure = plt.figure.Figure()
-        plt.style.use('ggplot')
+        # self.figure = plt.figure.Figure()
+        # plt.style.use('ggplot')
+        self.figure = Figure()
         self.axes = self.figure.add_subplot(111)
         self.canvas = FigureCanvas(self, -1, self.figure)
         self.sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -31,12 +32,13 @@ class TopPanel(wx.Panel):
         self.axes.set_ylim(-0.1, 5.1)
         self.canvas.draw()
 
-    def draw(self, x, y1, y2):
+    def draw(self, x, y1, y2, y_ref):
         self.axes.clear()
         self.axes.set_ylabel("Voltage (V)")
         self.axes.set_xlabel("Time (s)")
         self.axes.plot(x, y1, 'C1o--')
         self.axes.plot(x, y2, 'C2o--')
+        self.axes.plot(x, y_ref, 'C3o--')
         self.canvas.draw()
 
 
@@ -81,6 +83,7 @@ class BottomPanel(wx.Panel):
         self.x = np.array([])
         self.y1 = np.array([])
         self.y2 = np.array([])
+        self.y_ref = np.array([])
         self.time = 0
         self.values = []
         self.stopAcquisition = False
@@ -88,7 +91,7 @@ class BottomPanel(wx.Panel):
         self.highValueBoard = 5.0
         self.boardResolution = 1023
         self.samplingTime = 500
-        self.umbral = 0
+        self.threshold = 0
 
     def OnStartSaving(self, event):
         fdlg = wx.FileDialog(self, "Input setting file path", "",
@@ -111,12 +114,12 @@ class BottomPanel(wx.Panel):
         self.buttonStop.Show()
         if(self.serialConnection == True):
             samples = int(self.spinCtrlTime.GetValue())
-            self.umbral = int(self.spinCtrlUmbral.GetValue())
+            self.threshold = int(self.spinCtrlUmbral.GetValue())
             try:
                 valor1 = self.a0.read()
                 valor2 = self.a1.read()
-                valor1 = (float(valor1)*(self.highValueBoard))
-                valor2 = (float(valor2)*(self.highValueBoard))
+                valor1 = (float(valor1) * (self.highValueBoard))
+                valor2 = (float(valor2) * (self.highValueBoard))
                 msg_console = "Tiempo:" + str(self.time)+" (s)"+"\t"
                 msg_console += "Tension 1: " + \
                     "{0:.5f}".format(valor1)+" (V)\t"
@@ -125,19 +128,22 @@ class BottomPanel(wx.Panel):
                 self.values.append(str(self.time)+"," +
                                    "{0:05f}".format(valor1)+"," +
                                    "{0:05f}".format(valor2))
+                self.x = np.append(self.x, self.time)
                 self.y1 = np.append(self.y1, valor1)
                 self.y2 = np.append(self.y2, valor2)
-                self.x = np.append(self.x, self.time)
-                self.graph.draw(self.x, self.y1, self.y2)
-                if(valor1 > self.umbral/1000.0):
+                self.y_ref = np.append(self.y_ref, self.threshold / 1000.0)
+
+                self.graph.draw(self.x, self.y1, self.y2, self.y_ref)
+                if(valor1 > self.threshold / 1000.0):
                     self.d11.write(1)
                 else:
                     self.d11.write(0)
-                if(valor2 > self.umbral/1000.0):
+                if(valor2 > self.threshold / 1000.0):
                     self.d12.write(1)
                 else:
                     self.d12.write(0)
-            except:
+            except Exception as e:
+                print(e)
                 pass
 
             self.time = self.time + 0.5
