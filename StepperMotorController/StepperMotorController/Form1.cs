@@ -79,7 +79,8 @@ namespace StepperMotorController
                 serialPort.Write(parameters);
                 Txt_Data.Text = Convert.ToString(parameters);
             }
-            Thread.Sleep(10000);
+            serialPort.DiscardOutBuffer();
+            Thread.Sleep(7000);
             serialPort.Close();
             await GetDelay(500);
             Btn_Start.Visible = true;

@@ -20,7 +20,40 @@ void setup() {
   Serial.begin(9600);
 }
 
-void trapezoidal() {}
+void trapezoidal() {
+  int lim = (int)((float) (steps) / 3.0);
+  float temp = 0;
+  int delayTime = 0;
+  float m1 = (float) ((minTime - maxTime) / (lim - 1));
+  float b1 = (float) (minTime - m1 * lim);
+  float m2 = (float) ((-minTime + maxTime) / (steps - 2*lim));
+  float b2 = (float) (maxTime - m2 * steps);
+
+  for (; i < steps; ++i) {
+    if (i < lim) {
+      temp = m1 * i + b1;
+      delayTime = (int) temp;
+      digitalWrite(stepPin, HIGH);
+      delayMicroseconds(delayTime);
+      digitalWrite(stepPin, LOW);
+      delayMicroseconds(delayTime);
+    }
+    if (i > lim && i > lim * 2) {
+      digitalWrite(stepPin, HIGH);
+      delayMicroseconds(minTime);
+      digitalWrite(stepPin, LOW);
+      delayMicroseconds(minTime);
+    }
+    if (i > lim * 2) {
+      temp = m2 * i + b2;
+      delayTime = (int)(temp);  
+      digitalWrite(stepPin, HIGH);
+      delayMicroseconds(delayTime);
+      digitalWrite(stepPin, LOW);
+      delayMicroseconds(delayTime);
+    }
+  }
+}
 
 void loop() {
   digitalWrite(LED_BUILTIN, LOW);
@@ -43,4 +76,37 @@ void loop() {
       }      
     }
   }
+
+  if (readSerial == false && direct == "CWS") {
+      digitalWrite(LED_BUILTIN, HIGH);
+      digitalWrite(dirPin, HIGH);
+      if (steps < 50){
+        for (; i < steps; ++i) {
+          digitalWrite(stepPin, HIGH);
+          delayMicroseconds(maxTime);
+          digitalWrite(stepPin, LOW);
+          delayMicroseconds(maxTime);  
+        }
+      } else {
+        trapezoidal();
+      }
+      inParameters = "";
+      readSerial = true;
+    }
+
+  if (readSerial == false && direct == "CCW") {
+    digitalWrite(LED_BUILTIN, HIGH);
+    digitalWrite(dirPin, LOW);
+    if (steps < 50){
+      for (; i < steps; ++i) {
+        digitalWrite(stepPin, HIGH);
+        delayMicroseconds(maxTime);
+        digitalWrite(stepPin, LOW);
+        delayMicroseconds(maxTime);  
+      }  
+    } else {
+      trapezoidal();
+    }
+  }
+  delay(5000);
 }
