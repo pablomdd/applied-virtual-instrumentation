@@ -34,13 +34,13 @@ namespace StepperMotorController
             this.Btn_Start = new System.Windows.Forms.Button();
             this.CB_Port = new System.Windows.Forms.ComboBox();
             this.Pn_Direction = new System.Windows.Forms.Panel();
+            this.RB_CounterClockwise = new System.Windows.Forms.RadioButton();
+            this.Lbl_Direction = new System.Windows.Forms.Label();
             this.RB_Clockwise = new System.Windows.Forms.RadioButton();
             this.Txt_Data = new System.Windows.Forms.TextBox();
             this.Lbl_Angle = new System.Windows.Forms.Label();
             this.NUD_Angle = new System.Windows.Forms.NumericUpDown();
             this.Lbl_Port = new System.Windows.Forms.Label();
-            this.Lbl_Direction = new System.Windows.Forms.Label();
-            this.RB_CounterClockwise = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_Revolutions)).BeginInit();
             this.Pn_Direction.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_Angle)).BeginInit();
@@ -79,6 +79,7 @@ namespace StepperMotorController
             this.Btn_Start.TabIndex = 2;
             this.Btn_Start.Text = "Start";
             this.Btn_Start.UseVisualStyleBackColor = true;
+            this.Btn_Start.Click += new System.EventHandler(this.Btn_Start_Click);
             // 
             // CB_Port
             // 
@@ -98,6 +99,28 @@ namespace StepperMotorController
             this.Pn_Direction.Name = "Pn_Direction";
             this.Pn_Direction.Size = new System.Drawing.Size(200, 124);
             this.Pn_Direction.TabIndex = 4;
+            // 
+            // RB_CounterClockwise
+            // 
+            this.RB_CounterClockwise.AutoSize = true;
+            this.RB_CounterClockwise.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RB_CounterClockwise.Location = new System.Drawing.Point(7, 61);
+            this.RB_CounterClockwise.Name = "RB_CounterClockwise";
+            this.RB_CounterClockwise.Size = new System.Drawing.Size(188, 28);
+            this.RB_CounterClockwise.TabIndex = 15;
+            this.RB_CounterClockwise.TabStop = true;
+            this.RB_CounterClockwise.Text = "Counter Clockwise";
+            this.RB_CounterClockwise.UseVisualStyleBackColor = true;
+            // 
+            // Lbl_Direction
+            // 
+            this.Lbl_Direction.AutoSize = true;
+            this.Lbl_Direction.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Lbl_Direction.Location = new System.Drawing.Point(3, 0);
+            this.Lbl_Direction.Name = "Lbl_Direction";
+            this.Lbl_Direction.Size = new System.Drawing.Size(84, 24);
+            this.Lbl_Direction.TabIndex = 14;
+            this.Lbl_Direction.Text = "Direction";
             // 
             // RB_Clockwise
             // 
@@ -159,28 +182,6 @@ namespace StepperMotorController
             this.Lbl_Port.TabIndex = 13;
             this.Lbl_Port.Text = "Port";
             // 
-            // Lbl_Direction
-            // 
-            this.Lbl_Direction.AutoSize = true;
-            this.Lbl_Direction.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Lbl_Direction.Location = new System.Drawing.Point(3, 0);
-            this.Lbl_Direction.Name = "Lbl_Direction";
-            this.Lbl_Direction.Size = new System.Drawing.Size(84, 24);
-            this.Lbl_Direction.TabIndex = 14;
-            this.Lbl_Direction.Text = "Direction";
-            // 
-            // RB_CounterClockwise
-            // 
-            this.RB_CounterClockwise.AutoSize = true;
-            this.RB_CounterClockwise.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RB_CounterClockwise.Location = new System.Drawing.Point(7, 61);
-            this.RB_CounterClockwise.Name = "RB_CounterClockwise";
-            this.RB_CounterClockwise.Size = new System.Drawing.Size(188, 28);
-            this.RB_CounterClockwise.TabIndex = 15;
-            this.RB_CounterClockwise.TabStop = true;
-            this.RB_CounterClockwise.Text = "Counter Clockwise";
-            this.RB_CounterClockwise.UseVisualStyleBackColor = true;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -197,6 +198,7 @@ namespace StepperMotorController
             this.Controls.Add(this.Lvl_Revolutions);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.NUD_Revolutions)).EndInit();
             this.Pn_Direction.ResumeLayout(false);
             this.Pn_Direction.PerformLayout();
