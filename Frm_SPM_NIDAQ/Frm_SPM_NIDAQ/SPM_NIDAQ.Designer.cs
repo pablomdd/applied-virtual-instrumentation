@@ -51,6 +51,7 @@ namespace Frm_SPM_NIDAQ
             this.Btn_Start.TabIndex = 0;
             this.Btn_Start.Text = "Start";
             this.Btn_Start.UseVisualStyleBackColor = true;
+            this.Btn_Start.Click += new System.EventHandler(this.Btn_Start_Click);
             // 
             // Plt_SPM
             // 
@@ -104,6 +105,7 @@ namespace Frm_SPM_NIDAQ
             this.Btn_Stop.TabIndex = 6;
             this.Btn_Stop.Text = "Stop";
             this.Btn_Stop.UseVisualStyleBackColor = true;
+            this.Btn_Stop.Click += new System.EventHandler(this.Btn_Stop_Click);
             // 
             // Btn_Save
             // 

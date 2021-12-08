@@ -50,7 +50,7 @@ void trapezoidal() {
       digitalWrite(stepPin, HIGH);
       delayMicroseconds(delayTime);
       digitalWrite(stepPin, LOW);
-      delayMicroseconds(delayTime);
+      delayMicroseconds(delayTime);s
     }
   }
 }
