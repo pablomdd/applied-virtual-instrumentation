@@ -29,7 +29,7 @@ namespace Frm_SPM_NIDAQ
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             this.Btn_Start = new System.Windows.Forms.Button();
             this.Plt_SPM = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.NUD_Samples = new System.Windows.Forms.NumericUpDown();
@@ -55,8 +55,8 @@ namespace Frm_SPM_NIDAQ
             // 
             // Plt_SPM
             // 
-            chartArea2.Name = "ChartArea1";
-            this.Plt_SPM.ChartAreas.Add(chartArea2);
+            chartArea1.Name = "ChartArea1";
+            this.Plt_SPM.ChartAreas.Add(chartArea1);
             this.Plt_SPM.Location = new System.Drawing.Point(343, 39);
             this.Plt_SPM.Name = "Plt_SPM";
             this.Plt_SPM.Size = new System.Drawing.Size(366, 302);
@@ -115,6 +115,7 @@ namespace Frm_SPM_NIDAQ
             this.Btn_Save.TabIndex = 7;
             this.Btn_Save.Text = "Save";
             this.Btn_Save.UseVisualStyleBackColor = true;
+            this.Btn_Save.Click += new System.EventHandler(this.Btn_Save_Click);
             // 
             // Lbl_Period
             // 

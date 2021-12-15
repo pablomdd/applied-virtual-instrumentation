@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -131,6 +132,47 @@ namespace Frm_SPM_NIDAQ
             await GetDelay(2000);
             Btn_Start.Visible = true;
             Btn_Save.Visible = true;
+        }
+
+        private string[] StringDataArray(int number)
+        {
+            string[] arr = new string[number + 1];
+            arr[0] = "Time_(s),VCh0)";
+
+            for (int i = 1; i < number + 1; ++i)
+            {
+                arr[i] = Convert.ToString(time[i - 1]) + "," + Convert.ToString(voltageCh0[i - 1]);
+                return arr;
+            }
+        }
+
+        private void Btn_Save_Click(object sender, EventArgs e)
+        {
+            Btn_Start.Visible = false;
+            Btn_Save.Visible = false;
+            Btn_Stop.Visible = false;
+            Stream myStream;
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.RestoreDirectory = true;
+            if (saveFileDialog.ShowDialog+() == DialogResult.OK)
+            {
+                string[] values = StringDataArray(time.Length);
+                if ((myStream = saveFileDialog.OpenFile()) != null)
+                {
+                    using (StreamWriter sw = new StreamWriter(myStream)
+                    {
+                        for (int i = 0; i < values.Length; ++i)
+                            {
+                                sw.WriteLine(values[i]);
+                            }
+                }
+                        
+                    
+                    myStream.Close();
+                }
+            }
+            Btn_Start.Visible = true;
+            Btn_Save.Visible =  true;
         }
     }
 }
