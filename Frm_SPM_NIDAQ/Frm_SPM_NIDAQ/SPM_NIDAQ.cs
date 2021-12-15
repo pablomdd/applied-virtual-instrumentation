@@ -8,9 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-// TODO: Agregar las References a NationalInstruments .DAQmx y .Common 
-// using NationalInstruments;
-// using NationalInstruments.DAQmx;
+using NationalInstruments;
+using NationalInstruments.DAQmx;
 
 namespace Frm_SPM_NIDAQ
 {
@@ -20,9 +19,9 @@ namespace Frm_SPM_NIDAQ
         int period;
         double[] time;
         double[] voltageCh0;
-        // NationalInstruments.DAQmx.Task analogTask;
-        // AIChannel inputChannel0;
-        // AnalogSingleChannelReader aIReader;
+        NationalInstruments.DAQmx.Task analogTask;
+        AIChannel inputChannel0;
+        AnalogSingleChannelReader aIReader;
 
         bool stopAdquisition = false;
 
@@ -30,7 +29,6 @@ namespace Frm_SPM_NIDAQ
         {
             InitializeComponent();
         }
-        // TODO: Agregar las References a National Instruments DAQmx y Common 
         private void SPM_NIDAQ_Load(object sender, EventArgs e)
         {
             Btn_Start.Visible = false;
@@ -154,22 +152,19 @@ namespace Frm_SPM_NIDAQ
             Stream myStream;
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.RestoreDirectory = true;
-            if (saveFileDialog.ShowDialog+() == DialogResult.OK)
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
                 string[] values = StringDataArray(time.Length);
                 if ((myStream = saveFileDialog.OpenFile()) != null)
                 {
-                    using (StreamWriter sw = new StreamWriter(myStream)
-                    {
+                    using (StreamWriter sw = new StreamWriter(myStream))
                         for (int i = 0; i < values.Length; ++i)
-                            {
-                                sw.WriteLine(values[i]);
-                            }
-                }
-                        
+                        {
+                            sw.WriteLine(values[i]);
+                        }
                     
-                    myStream.Close();
-                }
+                }    
+                myStream.Close();       
             }
             Btn_Start.Visible = true;
             Btn_Save.Visible =  true;

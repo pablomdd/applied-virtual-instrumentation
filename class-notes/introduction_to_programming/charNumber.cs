@@ -25,7 +25,7 @@ namespace Ejercicio7
                 }
             }
 
-            foreach (var kvp in dict)
+            foreach (KeyValuePair<string, int> kvp in dict)
             {
                 Console.WriteLine("El caracter {0} aparece {1} veces.", kvp.Key, kvp.Value);
             }
