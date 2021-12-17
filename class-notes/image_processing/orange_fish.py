@@ -45,7 +45,7 @@ plt.imshow(yellow_rgb)
 plt.axis('off')
 plt.title('Yellow fish')
 
-bckfish = cv2.bitwise_and(bck, bck, mask = imask.astype(np.uint8))
+bckfish = cv2.bitwise_and(background, background, mask = imask.astype(np.uint8))
 nofish = img.copy()
 nofish = cv2.bitwise_and(nofish, nofish,
                          mask = (np.bitwise_not(imask)).astype(np.uint8))
@@ -56,5 +56,5 @@ plt.figure(figsize=(20,20))
 plt.subplot(111)
 plt.imshow(nofish_rgb)
 plt.axis('off')
-plt.title('Original image')
+plt.title('Transparent fish image')
 
