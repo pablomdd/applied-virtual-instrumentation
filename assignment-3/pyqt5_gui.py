@@ -12,6 +12,7 @@ from PyQt5.QtWidgets import (
     QVBoxLayout,
     QGridLayout,
     QLabel,
+    QLineEdit,
     QWidget,
     QSpinBox,
     QComboBox,
@@ -20,6 +21,7 @@ from PyQt5.QtWidgets import (
     QFileDialog
 )
 import matplotlib
+from math_toolbox import Toolbox
 matplotlib.use('Qt5Agg')
 matplotlib.style.use('ggplot')
 
@@ -36,7 +38,7 @@ class MplCanvas(FigureCanvasQTAgg):
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Tarea 2 | Qt5")
+        self.setWindowTitle("Tarea 3 | Qt5")
         self.canvas = MplCanvas(self, width=5, height=4, dpi=100)
         main_layout = QVBoxLayout()
         main_layout.addWidget(self.canvas)
@@ -83,7 +85,32 @@ class MainWindow(QMainWindow):
         self.btn_save = QPushButton("Save")
         self.btn_save.clicked.connect(self.save_file)
         control_layout.addWidget(self.btn_save, 1, 5)
-
+        
+        lbl_integral = QLabel("A0 - Numerical Integral")
+        control_layout.addWidget(lbl_integral, 2, 0)
+        self.txt_integral = QLineEdit("0")
+        self.txt_integral.setReadOnly(True)
+        control_layout.addWidget(self.txt_integral, 3, 0)
+        
+        lbl_mean = QLabel("A0 - Aritmetic Mean")
+        control_layout.addWidget(lbl_mean, 2, 1)
+        self.txt_mean = QLineEdit("0")
+        self.txt_mean.setReadOnly(True)
+        control_layout.addWidget(self.txt_mean, 3, 1)
+        
+        lbl_std_dev = QLabel("A0 - Std. Deviation")
+        control_layout.addWidget(lbl_std_dev, 2, 2)
+        self.txt_std_dev = QLineEdit("0")
+        self.txt_std_dev.setReadOnly(True)
+        control_layout.addWidget(self.txt_std_dev, 3, 2)
+        
+        self.btn_calc_a0 = QPushButton("Calculate A0")
+        self.btn_calc_a0.clicked.connect(self.calculate_a0)
+        control_layout.addWidget(self.btn_calc_a0, 2, 3)
+        
+        self.btn_save_a0 = QPushButton("Save A0 F'(t)")
+        self.btn_save_a0.clicked.connect(self.save_a0)
+        control_layout.addWidget(self.btn_save_a0, 3, 3)
         main_layout.addLayout(control_layout)
 
         widget = QWidget()
@@ -101,7 +128,45 @@ class MainWindow(QMainWindow):
         self.period = 500
         # self.samples = 0
         # self.threshold = 0
+        self.a0_mean = 0
+        self.a0_std_dev = 0
+        self.a0_integral = 0
+        self.a0_yd = []
+        self.a0_td = []
+        self.x = np.asarray([])
+        self.y1 = np.asarray([])
+        self.y2 = np.asarray([])
+        
 
+    def calculate_a0(self):
+        toolbox = Toolbox()
+        # print(toolbox.mean(self.y1))
+        self.a0_integral = toolbox.numerical_integral(self.x, self.y1)
+        self.txt_integral.setText(str(self.a0_integral))
+        self.a0_mean = toolbox.mean(self.y1)
+        self.txt_mean.setText(str(self.a0_mean))
+        self.a0_std_dev = toolbox.std(self.y1)
+        self.txt_std_dev.setText(str(self.a0_std_dev))
+    
+    def save_a0(self):
+        toolbox = Toolbox()
+        y_d, t_aux = toolbox.first_derivative(self.x, self.y1)
+
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+        filename, _ = QFileDialog.getSaveFileName(self,
+                                                  "QFileDialog.getSaveFileName()", "",
+                                                  "csv Files(*.csv);;All Files (*)",
+                                                  options=options)
+        filename = filename+".csv"  
+        if(filename):
+            file = open(filename, 'w')
+            file.write("Time_(s),F'_(t)"+"\n")
+            for i in range(len(y_d)):
+                line = f"{t_aux[i]},{y_d[i]}"
+                file.write(line + "\n")
+            file.close()
+    
     def save_file(self):
         self.btn_start.hide()
         self.btn_save.hide()

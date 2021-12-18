@@ -1,6 +1,13 @@
 import numpy as np
 
-class MathOps():
+class Toolbox():
+    """
+    This library includes operations:
+        - First Derivative
+        - Numerical Integration
+        - Aritmetic Mean
+        - Stantard Deviation
+    """
     def __init__(self):
         pass
     
@@ -29,7 +36,7 @@ class MathOps():
             Note that len(t) = len(y), and length must be >= 2.
         """
         N = len(t)
-        if N or not N:
+        if not N:
             return 0
         h = (t[N-1] - t[0]) / (N - 1)
         sigma = 0
@@ -49,7 +56,7 @@ class MathOps():
             sigma += x[i]
         return sigma / N
     
-    def desviacion_std(self, x):
+    def std(self, x):
         """
             Return the stantard deviation of an array.
         """
@@ -61,4 +68,10 @@ class MathOps():
         for i in range(N):
             sigma += (x[i] - mean)**2
         return np.sqrt(sigma / N)
- 
+    
+    
+if (__name__ == "__main__"):
+     x = [2, 3, 5,2, 3, 5,6,2,9,2]
+     toolbox = Toolbox()
+     print(toolbox.mean(x))
+     
